@@ -1,62 +1,53 @@
-# Proyek Akhir: Aplikasi Cuaca Sederhana dengan Tkinter
 
-## Penjelasan
-Pada proyek akhir ini, Anda akan membuat aplikasi cuaca sederhana menggunakan Tkinter. Aplikasi akan mengambil data cuaca dari API (misal: OpenWeatherMap) berdasarkan nama kota yang dimasukkan pengguna, lalu menampilkan hasilnya di jendela GUI.
+# Proyek Akhir: Aplikasi Cuaca dengan Tkinter dan SQLite
 
-### Langkah-langkah
-1. Buat form input untuk nama kota.
-2. Ambil data cuaca dari API menggunakan modul `requests`.
-3. Tampilkan hasil cuaca di label.
+Proyek ini adalah aplikasi desktop sederhana untuk mengecek cuaca yang dibuat dengan Python menggunakan library `tkinter` untuk antarmuka grafis (GUI) dan `sqlite3` untuk manajemen database.
 
-> **Catatan:** Anda perlu mendaftar dan mendapatkan API key dari https://openweathermap.org/api (bisa gunakan key demo untuk latihan).
+## Fitur
 
-## Contoh Program
-Lihat kode pada file `18_proyek_akhir_cuaca.py` berikut:
+1.  **Pencarian Cuaca Real-time**: Memasukkan nama kota untuk mendapatkan data cuaca terkini.
+2.  **Tampilan Informasi Lengkap**: Menampilkan suhu, deskripsi cuaca, kelembapan, dan kecepatan angin.
+3.  **Riwayat Pencarian**: Setiap pencarian yang berhasil akan disimpan ke dalam database SQLite.
+4.  **Jendela Riwayat**: Menampilkan seluruh riwayat pencarian dalam jendela terpisah yang mudah dibaca.
+5.  **Penanganan Error**: Memberikan notifikasi jika kota tidak ditemukan atau terjadi masalah koneksi.
 
-```python
-import tkinter as tk
-import requests
+## Komponen yang Digunakan
 
-API_KEY = "YOUR_API_KEY"  # Ganti dengan API key Anda
-URL = "https://api.openweathermap.org/data/2.5/weather"
+-   **Tkinter**: Untuk membuat semua elemen GUI seperti jendela, label, entry (input teks), tombol, dan frame.
+-   **Requests**: Library pihak ketiga untuk melakukan permintaan HTTP ke API cuaca.
+-   **SQLite3**: Untuk membuat dan mengelola database lokal yang menyimpan riwayat pencarian.
+-   **OpenWeatherMap API**: Sebagai sumber data cuaca.
 
-def get_weather():
-    city = entry_city.get()
-    params = {"q": city, "appid": API_KEY, "units": "metric", "lang": "id"}
-    try:
-        response = requests.get(URL, params=params)
-        data = response.json()
-        if data.get("cod") == 200:
-            cuaca = data["weather"][0]["description"]
-            suhu = data["main"]["temp"]
-            label_result.config(text=f"Cuaca: {cuaca}\nSuhu: {suhu}°C")
-        else:
-            label_result.config(text="Kota tidak ditemukan.")
-    except Exception as e:
-        label_result.config(text=f"Error: {e}")
+## Cara Menjalankan Aplikasi
 
-root = tk.Tk()
-root.title("Aplikasi Cuaca Sederhana")
+1.  **Pastikan Library Terinstall**:
+    Anda mungkin perlu menginstall library `requests`. Buka terminal atau command prompt dan jalankan:
+    ```bash
+    pip install requests
+    ```
 
-label = tk.Label(root, text="Masukkan nama kota:")
-label.pack(pady=5)
+2.  **Dapatkan API Key**:
+    -   Buat akun gratis di [OpenWeatherMap](https://openweathermap.org/appid).
+    -   Dapatkan API key Anda dari dashboard akun Anda.
 
-entry_city = tk.Entry(root)
-entry_city.pack(pady=5)
+3.  **Masukkan API Key ke Kode**:
+    -   Buka file `weather_app.py`.
+    -   Cari baris `API_KEY = "YOUR_API_KEY"`.
+    -   Ganti `"YOUR_API_KEY"` dengan API key yang sudah Anda dapatkan.
 
-button = tk.Button(root, text="Cek Cuaca", command=get_weather)
-button.pack(pady=5)
+4.  **Jalankan File Python**:
+    Buka terminal atau command prompt, arahkan ke direktori tempat file ini disimpan, lalu jalankan perintah:
+    ```bash
+    python weather_app.py
+    ```
 
-label_result = tk.Label(root, text="")
-label_result.pack(pady=10)
+5.  **Gunakan Aplikasi**:
+    -   Masukkan nama kota di kolom yang tersedia dan klik "Cari".
+    -   Klik tombol "Lihat Riwayat" untuk melihat pencarian sebelumnya.
 
-root.mainloop()
-```
+## Struktur Kode
 
-Program di atas akan menampilkan form input kota, tombol cek cuaca, dan hasil cuaca dari API.
-
-> **Pastikan Anda sudah menginstall modul `requests` dengan perintah:**
-> 
-> ```bash
-> pip install requests
-> ```
+-   **Fungsi Logika**: Terdiri dari fungsi-fungsi untuk mengambil data dari API (`get_weather`), menyimpan data ke database (`save_to_history`), dan inisialisasi database (`setup_database`).
+-   **Fungsi GUI**: Terdiri dari fungsi-fungsi yang berinteraksi langsung dengan antarmuka, seperti `search_weather` yang dipanggil oleh tombol dan `show_history` untuk menampilkan jendela baru.
+-   **Setup GUI Utama**: Bagian kode yang mendefinisikan dan menata semua widget Tkinter di jendela utama.
+-   **Inisialisasi**: Blok `if __name__ == "__main__":` yang memastikan database di-setup sebelum aplikasi berjalan.
